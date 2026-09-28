@@ -675,8 +675,11 @@ h2.sign{font-size:clamp(48px,6.6vw,96px);color:var(--red)}
 .hero .lede{font:500 clamp(19px,1.7vw,23px)/1.45 var(--body);max-width:32ch;margin:.7em 0 28px}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:14px}
 .hero-art{position:relative;width:100%;max-width:600px;justify-self:end;padding-top:clamp(56px,7vw,92px)}
+.box3d{cursor:pointer;touch-action:pan-y;-webkit-tap-highlight-color:transparent}
+.box3d canvas{display:block;width:100%;height:auto}
+.box3d:focus-visible{outline:3px solid var(--red);outline-offset:6px}
 .hero-art svg.box{width:100%;height:auto;filter:drop-shadow(0 18px 22px rgba(60,20,10,.16))}
-.neon{position:absolute;z-index:2;top:0;right:2%;transform:rotate(-4deg);font:400 clamp(30px,3.6vw,52px)/1 "Tilt Neon",var(--body);color:#FFD9DB;padding:.24em .5em .28em;border:3px solid currentColor;border-radius:.3em;text-align:center;text-shadow:0 0 4px #fff,0 0 10px var(--neon),0 0 22px var(--neon),0 0 44px var(--neon);box-shadow:0 0 8px var(--neon),inset 0 0 8px var(--neon),0 0 26px rgba(255,59,68,.45);background:rgba(20,6,8,.9)}
+.neon{position:absolute;z-index:2;top:0;left:0;transform:rotate(-4deg);font:400 clamp(30px,3.6vw,52px)/1 "Tilt Neon",var(--body);color:#FFD9DB;padding:.24em .5em .28em;border:3px solid currentColor;border-radius:.3em;text-align:center;text-shadow:0 0 4px #fff,0 0 10px var(--neon),0 0 22px var(--neon),0 0 44px var(--neon);box-shadow:0 0 8px var(--neon),inset 0 0 8px var(--neon),0 0 26px rgba(255,59,68,.45);background:rgba(20,6,8,.9)}
 .neon small{display:block;font-size:.3em;letter-spacing:.16em;margin-top:.45em;text-transform:uppercase}
 :root[data-look="night"] .neon{animation:hum 7s infinite}
 @keyframes hum{0%,18%,20%,62%,64%,100%{opacity:1}19%,63%{opacity:.62}}
@@ -808,6 +811,7 @@ footer .big svg{width:.8em;height:.8em}
     <div class="hero-art">
       <div class="neon" role="status">Open 24/7<small id="nowText">Drive-thru open</small></div>
       <svg class="box" id="box" viewBox="0 0 640 560" role="img" aria-label="A dozen donuts in an open Donut King box"></svg>
+      <div class="box3d" id="box3d" hidden tabindex="0" role="button" aria-label="A dozen donuts in a Donut King box. Press to open or close the lid."></div>
     </div>
   </div>
 </section>
@@ -1139,5 +1143,7 @@ footer .big svg{width:.8em;height:.8em}
   tick();setInterval(tick,30000);
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script src="js/box3d.js" defer></script>
 </body>
 </html>
