@@ -678,6 +678,8 @@ h2.sign{font-size:clamp(48px,6.6vw,96px);color:var(--red)}
 .box3d{cursor:pointer;touch-action:pan-y;-webkit-tap-highlight-color:transparent}
 .box3d canvas{display:block;width:100%;height:auto}
 .box3d:focus-visible{outline:3px solid var(--red);outline-offset:6px}
+.box-photo{display:block;width:100%;height:auto;filter:drop-shadow(0 22px 26px rgba(40,14,8,.22))}
+:root[data-look="night"] .box-photo{filter:drop-shadow(0 22px 30px rgba(0,0,0,.55))}
 .hero-art svg.box{width:100%;height:auto;filter:drop-shadow(0 18px 22px rgba(60,20,10,.16))}
 .neon{position:absolute;z-index:2;top:0;left:0;transform:rotate(-4deg);font:400 clamp(30px,3.6vw,52px)/1 "Tilt Neon",var(--body);color:#FFD9DB;padding:.24em .5em .28em;border:3px solid currentColor;border-radius:.3em;text-align:center;text-shadow:0 0 4px #fff,0 0 10px var(--neon),0 0 22px var(--neon),0 0 44px var(--neon);box-shadow:0 0 8px var(--neon),inset 0 0 8px var(--neon),0 0 26px rgba(255,59,68,.45);background:rgba(20,6,8,.9)}
 .neon small{display:block;font-size:.3em;letter-spacing:.16em;margin-top:.45em;text-transform:uppercase}
@@ -706,6 +708,7 @@ h2.sign{font-size:clamp(48px,6.6vw,96px);color:var(--red)}
 .item{padding:14px 4px 0;text-align:center;border-bottom:6px solid rgba(255,255,255,.9);box-shadow:0 7px 0 -1px rgba(120,60,40,.12);margin-bottom:18px}
 :root[data-look="night"] .item{border-bottom-color:rgba(200,210,255,.18);box-shadow:none}
 .item svg{width:80%;margin:0 auto}
+.item img.dn{display:block;width:92%;height:auto;aspect-ratio:1;object-fit:contain;margin:0 auto;filter:drop-shadow(0 8px 8px rgba(60,20,10,.18))}
 .tag{display:inline-block;margin:6px 0 12px;padding:6px 9px 5px;background:#fff;color:#1A0F0B;border:1px solid #D9D0CB;border-radius:2px;font:700 12px/1.25 var(--body);letter-spacing:.07em;text-transform:uppercase;box-shadow:0 1px 0 rgba(0,0,0,.08);max-width:100%}
 .tag em{display:block;font-style:normal;font-weight:500;letter-spacing:.04em;color:#7A5E54;font-size:11px;margin-top:2px}
 .tag .new{color:var(--red-ink);color:#C2141C}
@@ -810,8 +813,7 @@ footer .big svg{width:.8em;height:.8em}
     </div>
     <div class="hero-art">
       <div class="neon" role="status">Open 24/7<small id="nowText">Drive-thru open</small></div>
-      <svg class="box" id="box" viewBox="0 0 640 560" role="img" aria-label="A dozen donuts in an open Donut King box"></svg>
-      <div class="box3d" id="box3d" hidden tabindex="0" role="button" aria-label="A dozen donuts in a Donut King box. Press to open or close the lid."></div>
+      <img class="box-photo" src="img/box-dozen-1400.webp" srcset="img/box-dozen-800.webp 800w, img/box-dozen-1400.webp 1400w" sizes="(max-width:900px) 92vw, 46vw" width="1400" height="1120" alt="An open Donut King box holding a dozen assorted donuts: glazed, sprinkles, chocolate, strawberry, Boston creme, jelly and cinnamon sugar" fetchpriority="high">
     </div>
   </div>
 </section>
@@ -1071,13 +1073,21 @@ footer .big svg{width:.8em;height:.8em}
       ['Glazed','ring','gf','glazed',{gf:1,isNew:1}],['Chocolate frosted','ring','gf','choc',{gf:1,isNew:1}],['Strawberry','ring','gf','straw',{gf:1,isNew:1}],['Sprinkles','ring','gf','vanilla',{gf:1,sprinkles:40,isNew:1}]
     ]
   };
+  var PHOTO={
+    's-yeast':{'Glazed':'glazed','Chocolate frosted':'chocolate-frosted','Chocolate sprinkles':'chocolate-sprinkles','Strawberry frosted':'strawberry-frosted','Strawberry sprinkles':'strawberry-sprinkles','Vanilla sprinkles':'vanilla-sprinkles','Maple frosted':'maple-frosted','Apple crumb':'apple-crumb','Boston creme':'boston-creme','Bavarian creme':'bavarian-creme','Chocolate creme':'chocolate-creme','Vanilla creme':'vanilla-creme','Lemon creme':'lemon-creme','Strawberry':'strawberry','Black raspberry':'black-raspberry','Chocolate long john':'chocolate-long-john','Maple long john':'maple-long-john','Mini fritters':'mini-fritters'},
+    's-cake':{'Old fashion':'old-fashion','Buttermilk':'buttermilk','Plain cake':'plain-cake','Sugared':'sugared','Chocolate frosted':'cake-chocolate-frosted','Double chocolate':'double-chocolate','Chocolate honey dipped':'chocolate-honey-dipped','Blueberry':'blueberry','Apple spice':'apple-spice','Cinnamon crunch':'cinnamon-crunch','Toasted coconut':'toasted-coconut'},
+    's-fancy':{'Apple fritter':'apple-fritter','Cinnamon roll':'cinnamon-roll','Cinnamon twist':'cinnamon-twist','Glazed twist':'glazed-twist','Chocolate creme horn':'chocolate-creme-horn','Vanilla creme horn':'vanilla-creme-horn'},
+    's-holes':{'Glazed':'hole-glazed','Chocolate':'hole-chocolate','Cake':'hole-cake','Blueberry':'hole-blueberry'},
+    's-new':{'Glazed cronut':'cronut-glazed','Sugared cronut':'cronut-sugared','Chocolate cronut':'cronut-chocolate','Strawberry cronut':'cronut-strawberry','Glazed':'gf-glazed','Chocolate frosted':'gf-chocolate-frosted','Strawberry':'gf-strawberry','Sprinkles':'gf-sprinkles'}
+  };
   var KIND={'s-yeast':'Raised','s-cake':'Cake','s-fancy':'Fancy','s-holes':'Donut hole','s-new':''};
   Object.keys(CASE).forEach(function(k){
     var shelf=document.getElementById(k),html='';
     CASE[k].forEach(function(it){
       var extra=it[4]||{},spec={n:k+it[0],shape:it[1],dough:it[2],glaze:it[3]};for(var x in extra)spec[x]=extra[x];if(extra.seed)spec.seed=extra.seed;
       var d=k==='s-new'?(extra.gf?'Gluten-free':'Cronut'):KIND[k];
-      html+='<div class="item"><svg viewBox="0 0 200 200" aria-hidden="true">'+draw(spec)+'</svg><span class="tag">'+it[0]+'<em>'+(extra.isNew?'<span class="new">New</span> · ':'')+d+'</em></span></div>';
+      var ph=(PHOTO[k]||{})[it[0]];
+      html+='<div class="item">'+(ph?'<img class="dn" src="img/donuts/'+ph+'.webp" alt="" width="360" height="360" loading="lazy" decoding="async">':'<svg viewBox="0 0 200 200" aria-hidden="true">'+draw(spec)+'</svg>')+'<span class="tag">'+it[0]+'<em>'+(extra.isNew?'<span class="new">New</span> · ':'')+d+'</em></span></div>';
     });
     shelf.innerHTML=html;
   });
@@ -1086,39 +1096,6 @@ footer .big svg{width:.8em;height:.8em}
   render(document.querySelector('[data-donut="hero-o"]'),{seed:'hero-o',shape:'ring',glaze:'choc',sprinkles:38});
   render(document.querySelector('[data-donut="foot-o"]'),{seed:'foot',shape:'ring',glaze:'choc',sprinkles:30});
 
-  /* ---------- a dozen in an open box ---------- */
-  (function(){
-    var o='',W=640;
-    o+='<defs><linearGradient id="lid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EFE7E3"/></linearGradient>'+
-       '<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9DFDA"/><stop offset=".25" stop-color="#F8F3F0"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient></defs>';
-    /* lid, open and leaning back, with the shop stamp */
-    o+='<path d="M76 186 L564 186 L604 18 L36 18 Z" fill="url(#lid)" stroke="#DCD1CC" stroke-width="2"/>';
-    o+='<path d="M76 186 L564 186 L566 178 L74 178 Z" fill="#E4D9D4"/>';
-    o+='<text x="320" y="116" text-anchor="middle" font-family="Bagel Fat One, Cooper Black, sans-serif" font-size="74" fill="#E0262D" stroke="#24110B" stroke-width="0" letter-spacing="1">Donut King</text>';
-    o+='<text x="320" y="156" text-anchor="middle" font-family="Libre Franklin, Arial, sans-serif" font-weight="800" font-size="15" letter-spacing="3" fill="#24110B">1214 W LINDSEY &#183; NORMAN, OK &#183; OPEN 24/7</text>';
-    /* inside: back wall, floor with wax paper */
-    o+='<path d="M76 186 L564 186 L556 212 L84 212 Z" fill="#DCCFC9"/>';
-    o+='<path d="M84 212 L556 212 L598 478 L42 478 Z" fill="url(#floor)"/>';
-    o+='<path d="M104 224 L540 218 L574 466 L70 472 Z" fill="#FFFFFF" opacity=".55"/>';
-    o+='<path d="M212 222 L196 468 M330 220 L332 468 M446 220 L468 466" stroke="#EADFDA" stroke-width="2" fill="none"/>';
-    /* a dozen, three rows of four, getting bigger toward the front */
-    var rows=[{y:214,s:108},{y:290,s:122},{y:376,s:138}];
-    var pick=[
-      {seed:'bx1',shape:'ring',glaze:'glazed'},{seed:'bx2',shape:'ring',glaze:'choc',sprinkles:40},{seed:'bx3',shape:'filled',glaze:'choc'},{seed:'bx4',shape:'ring',glaze:'maple'},
-      {seed:'bx5',shape:'ring',glaze:'straw',sprinkles:44},{seed:'bx6',shape:'ring',glaze:'glazed',crumb:1},{seed:'bx7',shape:'ring',glaze:'vanilla',sprinkles:40},{seed:'bx8',shape:'ring',glaze:'choc'},
-      {seed:'bx9',shape:'filled',glaze:'none',powder:1,fill:'#E0262D'},{seed:'bx10',shape:'ring',dough:'choc',glaze:'choc',sprinkles:30},{seed:'bx11',shape:'ring',glaze:'straw'},{seed:'bx12',shape:'ring',dough:'cake',glaze:'none',sugar:1}
-    ];
-    rows.forEach(function(row,ri){
-      var t=(row.y+row.s*.45-212)/(478-212),L=84+(42-84)*t,R=556+(598-556)*t,sp=(R-L)/4;
-      for(var i=0;i<4;i++){var x=L+sp*(i+.5)-row.s/2;
-        o+='<svg x="'+x.toFixed(1)+'" y="'+row.y+'" width="'+row.s+'" height="'+(row.s*.92).toFixed(1)+'" viewBox="0 0 200 200" preserveAspectRatio="none">'+draw(pick[ri*4+i])+'</svg>';}
-    });
-    /* front wall with the red band */
-    o+='<path d="M42 478 L598 478 L606 540 L34 540 Z" fill="#FFFFFF" stroke="#DCD1CC" stroke-width="2"/>';
-    o+='<path d="M40 486 L600 486 L601 496 L39 496 Z" fill="#E0262D"/>';
-    o+='<text x="320" y="525" text-anchor="middle" font-family="Libre Franklin, Arial, sans-serif" font-weight="800" font-size="15" letter-spacing="6" fill="#24110B">ONE DOZEN &#183; FRESH ANY HOUR</text>';
-    document.getElementById('box').innerHTML=o;
-  })();
 
   /* ---------- tabs ---------- */
   var tabs=[].slice.call(document.querySelectorAll('.tab'));
@@ -1143,7 +1120,5 @@ footer .big svg{width:.8em;height:.8em}
   tick();setInterval(tick,30000);
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-<script src="js/box3d.js" defer></script>
 </body>
 </html>
